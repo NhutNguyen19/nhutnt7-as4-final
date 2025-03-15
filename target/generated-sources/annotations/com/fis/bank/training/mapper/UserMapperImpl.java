@@ -1,6 +1,7 @@
 package com.fis.bank.training.mapper;
 
 import com.fis.bank.training.dto.request.UserCreationRequest;
+import com.fis.bank.training.dto.request.UserUpdateRequest;
 import com.fis.bank.training.dto.response.UserResponse;
 import com.fis.bank.training.model.Role;
 import com.fis.bank.training.model.User;
@@ -49,5 +50,15 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return userResponse.build();
+    }
+
+    @Override
+    public void updateUser(User user, UserUpdateRequest request) {
+        if ( request == null ) {
+            return;
+        }
+
+        user.setUsername( request.getUsername() );
+        user.setEmail( request.getEmail() );
     }
 }

@@ -9,7 +9,23 @@ server:
     context-path: /api/v1
 
 spring:
+  application:
+    name: as4-final
   datasource:
-    url:
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5432/as4-final-data
+    username: postgres
+    password: 913020
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+  valid-duration: 3600
+  refreshable-duration: 36000
