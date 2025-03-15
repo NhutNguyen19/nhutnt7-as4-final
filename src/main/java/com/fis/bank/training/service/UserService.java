@@ -5,14 +5,17 @@ import com.fis.bank.training.dto.request.UserUpdateRequest;
 import com.fis.bank.training.dto.response.UserResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
     UserResponse saveUser(UserCreationRequest request);
 
     List<UserResponse> getUsers();
 
-    UserResponse updateUpdate(UserUpdateRequest request, String id);
-    UserResponse getUserById(String id);
+    UserResponse updateUser(UserUpdateRequest request, UUID id);
+    UserResponse getUserById(UUID id);
 
-    void deleteUser(String id);
+    void deleteUser(UUID id);
+
+    UserResponse getMyInfo();
 }

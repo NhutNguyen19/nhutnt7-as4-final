@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,4 +16,6 @@ public class UserUpdateRequest {
     String username;
 
     String email;
+
+    List<String> roles;
 }

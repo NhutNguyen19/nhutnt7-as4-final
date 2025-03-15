@@ -16,11 +16,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,17 +55,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUpdate(UserUpdateRequest request, String id) {
-        return null;
+    public UserResponse updateUser(UserUpdateRequest request, UUID id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        userMapper.updateUser(user, request);
+        var role = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(role));
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     @Override
-    public UserResponse getUserById(String id) {
-        return null;
+    public UserResponse getUserById(UUID id) {
+        return userMapper.toUserResponse(
+                userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     @Override
-    public void deleteUser(String id) {
+    public void deleteUser(UUID id) {
+        userRepository.deleteById(id);
+    }
 
+    @Override
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        UUID name = UUID.fromString(context.getAuthentication().getName());
+        User user = userRepository.findById(name).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toUserResponse(user);
     }
 }
