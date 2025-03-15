@@ -12,7 +12,7 @@ spring:
   application:
     name: as4-final
   datasource:
-    url: jdbc:postgresql://localhost:5432/as4-final-data
+    url: jdbc:postgresql://localhost:5433/postgres
     username: postgres
     password: 913020
     driver-class-name: org.postgresql.Driver

@@ -5,8 +5,9 @@ import com.fis.bank.training.dto.request.UserUpdateRequest;
 import com.fis.bank.training.dto.response.UserResponse;
 import com.fis.bank.training.model.Role;
 import com.fis.bank.training.model.User;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +24,13 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User user = new User();
+        User.UserBuilder user = User.builder();
 
-        user.setUsername( request.getUsername() );
-        user.setPassword( request.getPassword() );
-        user.setEmail( request.getEmail() );
+        user.username( request.getUsername() );
+        user.password( request.getPassword() );
+        user.email( request.getEmail() );
 
-        return user;
+        return user.build();
     }
 
     @Override
@@ -40,13 +41,15 @@ public class UserMapperImpl implements UserMapper {
 
         UserResponse.UserResponseBuilder userResponse = UserResponse.builder();
 
-        userResponse.id( user.getId() );
+        if ( user.getId() != null ) {
+            userResponse.id( UUID.fromString( user.getId() ) );
+        }
         userResponse.username( user.getUsername() );
         userResponse.password( user.getPassword() );
         userResponse.email( user.getEmail() );
         Set<Role> set = user.getRoles();
         if ( set != null ) {
-            userResponse.roles( new ArrayList<Role>( set ) );
+            userResponse.roles( new LinkedHashSet<Role>( set ) );
         }
 
         return userResponse.build();

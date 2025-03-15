@@ -13,9 +13,9 @@ import org.springframework.web.filter.CorsFilter;
 public class CorsConfiguration {
 
     @Bean
-    public CorsFilter corsFilter(){
-        org.springframework.web.cors.CorsConfiguration corsConfiguration
-                = new org.springframework.web.cors.CorsConfiguration();
+    public CorsFilter corsFilter() {
+        org.springframework.web.cors.CorsConfiguration corsConfiguration =
+                new org.springframework.web.cors.CorsConfiguration();
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");

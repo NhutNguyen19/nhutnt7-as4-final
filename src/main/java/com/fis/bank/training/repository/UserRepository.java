@@ -1,14 +1,17 @@
 package com.fis.bank.training.repository;
 
-import com.fis.bank.training.model.User;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
+import com.fis.bank.training.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByUsername(String username);
 
-    boolean existsByUsernameRoleAdmin(String username);
+    Optional<User> findByUsername(String adminName);
 }

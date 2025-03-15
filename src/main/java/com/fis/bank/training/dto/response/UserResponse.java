@@ -1,12 +1,14 @@
 package com.fis.bank.training.dto.response;
 
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fis.bank.training.model.Role;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +21,8 @@ public class UserResponse {
 
     @JsonIgnore
     String password;
+
     String email;
 
-    List<Role> roles;
+    Set<Role> roles;
 }

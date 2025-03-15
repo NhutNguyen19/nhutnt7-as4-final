@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         HashSet<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findById(PredefinedRole.USER_ROLE)
+        Role userRole = roleRepository.findById(String.valueOf(PredefinedRole.USER_ROLE))
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         roles.add(userRole);
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(UserUpdateRequest request, UUID id) {
+    public UserResponse updateUser(UserUpdateRequest request, String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, request);
@@ -65,20 +65,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserById(UUID id) {
+    public UserResponse getUserById(String id) {
         return userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     @Override
-    public void deleteUser(UUID id) {
+    public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
 
     @Override
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
-        UUID name = UUID.fromString(context.getAuthentication().getName());
+        String name = context.getAuthentication().getName();
         User user = userRepository.findById(name).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);

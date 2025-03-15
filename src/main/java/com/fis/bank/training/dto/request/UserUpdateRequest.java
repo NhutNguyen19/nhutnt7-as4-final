@@ -1,10 +1,12 @@
 package com.fis.bank.training.dto.request;
 
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.constraints.Size;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

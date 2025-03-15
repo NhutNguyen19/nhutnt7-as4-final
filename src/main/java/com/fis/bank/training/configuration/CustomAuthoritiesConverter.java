@@ -1,15 +1,15 @@
 package com.fis.bank.training.configuration;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public class CustomAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
     private final String REALM_ACCESS = "realm_access";
@@ -22,11 +22,11 @@ public class CustomAuthoritiesConverter implements Converter<Jwt, Collection<Gra
 
         Object roles = realmAccessMap.get(ROLES);
 
-        if(roles instanceof List stringRoles){
+        if (roles instanceof List stringRoles) {
             return ((List<String>) stringRoles)
                     .stream()
-                    .map(s -> new SimpleGrantedAuthority(String.format("%s%s", ROLE_PREFIX, s)))
-                    .collect(Collectors.toList());
+                            .map(s -> new SimpleGrantedAuthority(String.format("%s%s", ROLE_PREFIX, s)))
+                            .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
