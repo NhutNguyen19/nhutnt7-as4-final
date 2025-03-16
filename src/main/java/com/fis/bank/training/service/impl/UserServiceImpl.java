@@ -58,11 +58,21 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(UserUpdateRequest request, String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
         userMapper.updateUser(user, request);
-        var role = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(role));
+
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+            var roles = roleRepository.findAllById(request.getRoles());
+            if (roles.isEmpty()) {
+                throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+            }
+            user.setRoles(new HashSet<>(roles));
+        }
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
+
 
     @Override
     public UserResponse getUserById(String id) {

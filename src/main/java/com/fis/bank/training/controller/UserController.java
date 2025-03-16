@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.validation.Valid;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import com.fis.bank.training.dto.ApiResponse;
@@ -21,6 +22,7 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserController {
 
     UserService userService;
@@ -43,6 +45,10 @@ public class UserController {
 
     @PutMapping("/{id}/update")
     ApiResponse<UserResponse> updateUser(@RequestBody UserUpdateRequest request, @PathVariable("id") String id) {
+        log.info("Updating user with ID: {}", id);
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("User ID must not be null or empty");
+        }
         return ApiResponse.<UserResponse>builder()
                 .message("Successful")
                 .data(userService.updateUser(request, id))

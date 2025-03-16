@@ -3,6 +3,7 @@ package com.fis.bank.training.dto.request;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Size;
 
 import lombok.*;
@@ -19,5 +20,6 @@ public class UserUpdateRequest {
 
     String email;
 
+    @Nullable
     List<String> roles;
 }
