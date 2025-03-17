@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         HashSet<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findById(String.valueOf(PredefinedRole.USER_ROLE))
+        Role userRole = roleRepository.findById(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         roles.add(userRole);
 

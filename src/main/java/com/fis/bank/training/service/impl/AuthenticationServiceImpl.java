@@ -1,13 +1,18 @@
 package com.fis.bank.training.service.impl;
 
+import com.fis.bank.training.constant.PredefinedRole;
 import com.fis.bank.training.dto.request.*;
 import com.fis.bank.training.dto.response.AuthenticationResponse;
 import com.fis.bank.training.dto.response.IntrospectResponse;
+import com.fis.bank.training.dto.response.UserResponse;
 import com.fis.bank.training.exception.AppException;
 import com.fis.bank.training.exception.ErrorCode;
+import com.fis.bank.training.mapper.UserMapper;
 import com.fis.bank.training.model.InvalidatedToken;
+import com.fis.bank.training.model.Role;
 import com.fis.bank.training.model.User;
 import com.fis.bank.training.repository.InvalidatedTokenRepository;
+import com.fis.bank.training.repository.RoleRepository;
 import com.fis.bank.training.repository.UserRepository;
 import com.fis.bank.training.service.AuthenticationService;
 import com.nimbusds.jose.*;
@@ -20,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.impl.identity.Account;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,16 +34,16 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService{
-
+    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
 
@@ -117,14 +121,36 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
-    public String resetPassword(ResetPasswordRequest request) {
+    public void resetPassword(ResetPasswordRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
-        return null;
     }
+
+    @Override
+    public UserResponse createAdmin(UserCreationRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Set<Role> roles = new HashSet<>();
+        Role adminRole = roleRepository.findByName(PredefinedRole.ADMIN_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        roles.add(adminRole);
+
+        user.setRoles(roles);
+
+        user = userRepository.save(user);
+        return userMapper.toUserResponse(user);
+    }
+
+
+
 
     private SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());

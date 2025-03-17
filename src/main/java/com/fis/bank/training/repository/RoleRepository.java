@@ -11,5 +11,5 @@ import com.fis.bank.training.model.Role;
 public interface RoleRepository extends JpaRepository<Role, String> {
     Optional<Role> findById(String id);
 
-    Optional<Role> findByName(String userRole);
+    Optional<Role> findByName(String name);
 }
