@@ -19,6 +19,7 @@ public enum ErrorCode {
     USER_EXISTED(1009, "Tài khoản đã tồn tại, vui lòng chọn tài khoản khác", HttpStatus.BAD_REQUEST),
     USERNAME_IS_MISSING(1010, "Vui lòng nhập tài khoản", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1011, "Tài khoản không tồn tại", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_EXISTED(1012, "Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

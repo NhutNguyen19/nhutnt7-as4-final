@@ -1,5 +1,6 @@
 package com.fis.bank.training.dto.request;
 
+import com.fis.bank.training.model.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,4 +14,6 @@ public class ProductRequest {
     String description;
     double price;
     int stockQuantity;
+
+    Category category;
 }

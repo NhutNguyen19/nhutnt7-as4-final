@@ -23,4 +23,13 @@ public class Category {
     @ManyToOne
     @JsonBackReference
     Product product;
+
+    public Category(String name, String description, Product product) {
+        this.name = name;
+        this.description = description;
+        this.product = product;
+    }
+
+    public Category(String defaultCategory) {
+    }
 }
