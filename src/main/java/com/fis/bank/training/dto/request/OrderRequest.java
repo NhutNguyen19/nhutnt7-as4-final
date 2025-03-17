@@ -1,32 +1,25 @@
-package com.fis.bank.training.model;
+package com.fis.bank.training.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fis.bank.training.constant.Status;
-import jakarta.persistence.*;
+import com.fis.bank.training.model.OrderItem;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Entity
-@Getter
-@Setter
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+public class OrderRequest {
     LocalDateTime checkIn;
     LocalDateTime checkOut;
     Date orderDate;
     Status status;
     double totalAmount;
-
-    @OneToMany
-    @JsonBackReference
     OrderItem orderItem;
 }
