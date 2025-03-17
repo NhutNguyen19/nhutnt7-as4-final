@@ -22,13 +22,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
     ProductMapper productMapper;
-    CategoryMapper categoryMapper;
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
 
