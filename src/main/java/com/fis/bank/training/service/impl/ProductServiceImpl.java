@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getProductByCategory(String category) {
+    public List<ProductResponse> getProductByCategoryName(String category) {
         List<Product> products = productRepository.findByCategoryName(category);
         return products
                 .stream()

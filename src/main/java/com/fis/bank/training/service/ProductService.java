@@ -17,7 +17,7 @@ public interface ProductService {
 
     ProductResponse updateProduct(ProductRequest request, String id);
 
-    List<ProductResponse> getProductByCategory(String category);
+    List<ProductResponse> getProductByCategoryName(String category);
 
     ProductResponse findProductByName(String name);
 }

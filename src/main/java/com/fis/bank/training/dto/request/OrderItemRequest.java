@@ -14,4 +14,6 @@ import lombok.experimental.FieldDefaults;
 public class OrderItemRequest {
     int quantity;
     double unitPrice;
+    Product product;
+    Order order;
 }
