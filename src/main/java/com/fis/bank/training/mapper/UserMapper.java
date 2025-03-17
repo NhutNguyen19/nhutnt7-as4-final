@@ -11,6 +11,7 @@ import com.fis.bank.training.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
     User toUser(UserCreationRequest request);
 
     UserResponse toUserResponse(User user);

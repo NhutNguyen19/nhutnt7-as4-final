@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface AuthenticationService {
+
     IntrospectResponse introspect(IntrospectRequest request);
 
     AuthenticationResponse authenticate(AuthenticationRequest request);

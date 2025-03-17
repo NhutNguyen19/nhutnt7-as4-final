@@ -8,6 +8,7 @@ import com.fis.bank.training.dto.request.UserUpdateRequest;
 import com.fis.bank.training.dto.response.UserResponse;
 
 public interface UserService {
+
     UserResponse saveUser(UserCreationRequest request);
 
     List<UserResponse> getUsers();
