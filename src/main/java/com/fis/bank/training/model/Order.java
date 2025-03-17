@@ -1,12 +1,13 @@
 package com.fis.bank.training.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fis.bank.training.constant.Status;
 import jakarta.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -15,19 +16,18 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users", schema = "public")
-public class User {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    Date orderDate;
+    Status status;
+    double totalAmount;
 
-    String username;
-    String password;
-    String email;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<Role> roles;
+    @OneToMany
+    @JsonBackReference
+    OrderItem orderItem;
 
 
 }

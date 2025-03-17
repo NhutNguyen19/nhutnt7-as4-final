@@ -1,10 +1,7 @@
 package com.fis.bank.training.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,19 +12,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users", schema = "public")
-public class User {
-
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String username;
-    String password;
-    String email;
+    String name;
+    String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<Role> roles;
-
-
+    @ManyToOne
+    @JsonBackReference
+    Product product;
 }

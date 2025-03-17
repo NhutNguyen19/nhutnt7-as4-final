@@ -38,6 +38,8 @@ public class ApplicationInitConfig {
     @NonFinal
     static final String ADMIN_PASSWORD = "913020";
 
+
+
     @Bean
     @ConditionalOnProperty(
             prefix = "spring.datasource",
@@ -46,21 +48,18 @@ public class ApplicationInitConfig {
     )
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository, PermissionRepository permissionRepository) {
         log.info("Initializing application");
-
         return args -> {
-            // Tạo quyền nếu chưa có
             Permission readUser = createPermissionIfNotExists(permissionRepository, "READ_USER", "Quyền đọc thông tin người dùng");
             Permission writeUser = createPermissionIfNotExists(permissionRepository, "WRITE_USER", "Quyền chỉnh sửa thông tin người dùng");
             Permission deleteUser = createPermissionIfNotExists(permissionRepository, "DELETE_USER", "Quyền xóa người dùng");
             Permission manageRole = createPermissionIfNotExists(permissionRepository, "MANAGE_ROLE", "Quyền quản lý vai trò");
 
-            // Tạo Role nếu chưa có
             Role userRole = roleRepository.findByName(PredefinedRole.USER_ROLE)
                     .orElseGet(() -> {
                         Role role = Role.builder()
                                 .name(PredefinedRole.USER_ROLE)
                                 .description("User role")
-                                .permissions(Set.of(readUser))  // User chỉ có quyền READ_USER
+                                .permissions(Set.of(readUser, deleteUser))
                                 .build();
                         return roleRepository.save(role);
                     });
@@ -70,12 +69,21 @@ public class ApplicationInitConfig {
                         Role role = Role.builder()
                                 .name(PredefinedRole.ADMIN_ROLE)
                                 .description("Admin role")
-                                .permissions(Set.of(readUser, writeUser, deleteUser, manageRole)) // Admin có toàn bộ quyền
+                                .permissions(Set.of(readUser, writeUser, deleteUser, manageRole))
                                 .build();
                         return roleRepository.save(role);
                     });
 
-            // Tạo admin user nếu chưa có
+            Role coAdminRole = roleRepository.findByName("CO_ADMIN")
+                    .orElseGet(() -> {
+                        Role role = Role.builder()
+                                .name("CO_ADMIN")
+                                .description("Co-Admin role")
+                                .permissions(Set.of(readUser, writeUser, deleteUser, manageRole))
+                                .build();
+                        return roleRepository.save(role);
+                    });
+
             if (userRepository.findByUsername(ADMIN_NAME).isEmpty()) {
                 Set<Role> roles = new HashSet<>();
                 roles.add(adminRole);
@@ -89,10 +97,10 @@ public class ApplicationInitConfig {
                 userRepository.save(user);
                 log.warn("Admin user has been created with default password: admin, please change it");
             }
-
             log.info("Application initialization completed .....");
         };
     }
+
 
     private Permission createPermissionIfNotExists(PermissionRepository permissionRepository, String name, String description) {
         return permissionRepository.findByName(name).orElseGet(() -> {

@@ -25,6 +25,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +39,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +51,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     RoleRepository roleRepository;
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    TaskService taskService;
+    RuntimeService runtimeService;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -139,7 +146,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         Set<Role> roles = new HashSet<>();
-        Role adminRole = roleRepository.findByName(PredefinedRole.ADMIN_ROLE)
+        Role adminRole = roleRepository.findByName(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         roles.add(adminRole);
 
@@ -148,9 +155,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         user = userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
-
-
-
 
     private SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());

@@ -1,10 +1,6 @@
 package com.fis.bank.training.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import jakarta.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,19 +11,18 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users", schema = "public")
-public class User {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    int quantity;
+    double unitPrice;
 
-    String username;
-    String password;
-    String email;
+    @ManyToOne
+    Order order;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<Role> roles;
-
+    @OneToMany
+    Product product;
 
 }
