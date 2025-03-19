@@ -1,13 +1,14 @@
 package com.fis.bank.training.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fis.bank.training.constant.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,17 +17,19 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+
     LocalDateTime checkIn;
     LocalDateTime checkOut;
     Date orderDate;
     Status status;
     double totalAmount;
 
-    @OneToMany
-    @JsonBackReference
-    OrderItem orderItem;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderItem> orderItems = new ArrayList<>();
 }

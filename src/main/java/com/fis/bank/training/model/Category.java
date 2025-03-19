@@ -1,9 +1,14 @@
 package com.fis.bank.training.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,19 +21,12 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
     String name;
     String description;
 
-    @ManyToOne
-    @JsonBackReference
-    Product product;
-
-    public Category(String name, String description, Product product) {
-        this.name = name;
-        this.description = description;
-        this.product = product;
-    }
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<Product> products;
 
     public Category(String defaultCategory) {
     }

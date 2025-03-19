@@ -1,5 +1,6 @@
 package com.fis.bank.training.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,9 +21,11 @@ public class OrderItem {
     double unitPrice;
 
     @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     Order order;
 
-    @OneToMany
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     Product product;
-
 }

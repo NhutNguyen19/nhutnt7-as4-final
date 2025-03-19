@@ -37,7 +37,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse getCategoryById(String id) {
         return categoryMapper.toCategoryResponse(
-                categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Phân loại không được tìm thấy")));
+                categoryRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Phân loại không được tìm thấy")));
     }
 
     @Override

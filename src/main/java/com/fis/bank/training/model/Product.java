@@ -1,6 +1,7 @@
 package com.fis.bank.training.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -22,10 +22,8 @@ public class Product {
     double price;
     int stockQuantity;
 
-    @OneToMany
-    Category category;
-
     @ManyToOne
-    @JsonBackReference
-    OrderItem orderItem;
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
+    Category category;
 }

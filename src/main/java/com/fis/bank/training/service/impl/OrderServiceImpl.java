@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -30,10 +31,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse createOrder(OrderRequest request) {
         Order order = orderMapper.toOrder(request);
-        OrderItem orderItem = orderItemRepository.findById(request.getOrderItem().getId())
+        List<OrderItem> orderItem = (List<OrderItem>) orderItemRepository.findById(request.getOrderItem().getId())
                 .orElseThrow(() -> new RuntimeException("Đơn hàng không tồn tại"));
 
-        order.setOrderItem(orderItem);
+        order.setOrderItems(orderItem);
         order.setCheckIn(LocalDateTime.now());
         order.setStatus(Status.PROCESSING);
 

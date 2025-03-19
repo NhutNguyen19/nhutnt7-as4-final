@@ -56,10 +56,10 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/{category}/product")
-    ApiResponse<List<ProductResponse>> getProductByName(@PathVariable String category){
+    @GetMapping("/{id}/category")
+    ApiResponse<List<ProductResponse>> getProductByCategoryId(@PathVariable String id){
         return ApiResponse.<List<ProductResponse>>builder()
-                .data(productService.getProductByCategoryName(category))
+                .data(productService.getProductByCategoryId(id))
                 .build();
     }
 

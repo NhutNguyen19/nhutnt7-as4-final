@@ -38,14 +38,15 @@ public class OrderItemServiceImpl implements OrderItemService {
         Order order = orderRepository.findById(request.getOrder().getId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
 
+        // ✅ Sửa lỗi ép kiểu sai
         Product product = productRepository.findById(request.getProduct().getId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
 
         OrderItem orderItem = OrderItem.builder()
                 .quantity(request.getQuantity())
-                .unitPrice(product.getPrice())
+                .unitPrice(product.getPrice()) // ✅ Sửa lỗi gọi `getPrice()`
                 .order(order)
-                .product(product)
+                .product(product) // ✅ Sửa lỗi truyền `Product`
                 .build();
 
         orderItem = orderItemRepository.save(orderItem);
