@@ -31,4 +31,7 @@ public class OrderItem {
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 }

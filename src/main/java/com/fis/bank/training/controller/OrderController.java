@@ -10,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/Orders")
 @RequiredArgsConstructor
@@ -25,10 +27,23 @@ public class OrderController {
                 .build();
     }
 
-    @PostMapping("/{id}/check-out")
-    ApiResponse<OrderResponse> checkout(@PathVariable String id){
-        return ApiResponse.<OrderResponse>builder()
-                .data(orderService.checkout(id))
+    @GetMapping
+    ApiResponse<List<OrderResponse>> getPendingOrders(){
+        return ApiResponse.<List<OrderResponse>>builder()
+                .data(orderService.getPendingOrders())
                 .build();
+    }
+
+    @PostMapping("/approve")
+    ApiResponse<String> completeOrderApprovalTask(@RequestParam String taskId, @RequestParam boolean isApproved){
+        orderService.completeOrderApprovalTask(taskId, isApproved);
+        return ApiResponse.<String>builder()
+                .build();
+    }
+
+    @PostMapping("/cancel")
+    ApiResponse<String> cancelOrder(@RequestParam String taskId){
+        orderService.cancelOrderTask(taskId);
+        return ApiResponse.<String>builder().build();
     }
 }

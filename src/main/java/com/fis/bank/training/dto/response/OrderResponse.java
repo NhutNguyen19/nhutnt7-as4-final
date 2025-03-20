@@ -1,10 +1,8 @@
 package com.fis.bank.training.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fis.bank.training.constant.Status;
 import com.fis.bank.training.model.OrderItem;
 import com.fis.bank.training.model.User;
-import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,6 +22,6 @@ public class OrderResponse {
     Date orderDate;
     Status status;
     double totalAmount;
-    List<OrderItem> orderItems;
-    User user;
+    String userId; // Thêm userId vào đây
+    List<OrderItemResponse> orderItems;
 }

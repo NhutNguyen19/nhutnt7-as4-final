@@ -79,24 +79,37 @@ public class OrderItemServiceImpl implements OrderItemService {
             orderItemIds.add(orderItem.getId()); // Lưu danh sách orderItemId
         }
 
-        // Lấy task "Chọn sản phẩm" cho user đang thực hiện đơn hàng
-        Task task = taskService.createTaskQuery()
-                .taskDefinitionKey("select_product") // Đảm bảo taskDefinitionKey đúng
-                .taskAssignee(request.getOrder().getUser().getId()) // Người dùng đặt hàng
+        // 🔹 Tìm Process Instance đang chạy
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceBusinessKey(order.getId()) // Sử dụng orderId để tìm process
                 .singleResult();
 
-        // Chỉ hoàn thành task nếu nó tồn tại
+        if (processInstance == null) {
+            throw new RuntimeException("Không tìm thấy Process Instance cho đơn hàng: " + order.getId());
+        }
+
+        // 🔹 Lấy Task "Chọn sản phẩm" trong process instance
+        Task task = taskService.createTaskQuery()
+                .processInstanceId(processInstance.getId())
+                .taskDefinitionKey("select_product") // Đúng với ID trong BPMN
+                .taskAssignee("user")
+                .singleResult();
+
         if (task != null) {
+            // Truyền biến vào process để tiếp tục xử lý
             Map<String, Object> variables = new HashMap<>();
-            variables.put("orderItemIds", orderItemIds); // Truyền danh sách sản phẩm đã đặt
+            variables.put("orderItemIds", orderItemIds); // Danh sách sản phẩm đã đặt
             variables.put("orderId", order.getId()); // Truyền ID đơn hàng để dùng sau này
 
-            taskService.complete(task.getId(), variables);
+            taskService.complete(task.getId(), variables); // Hoàn thành task
+            System.out.println("✅ Hoàn thành task 'Chọn sản phẩm' cho đơn hàng: " + order.getId());
         } else {
-            throw new RuntimeException("Không tìm thấy task 'Chọn sản phẩm' để hoàn thành");
+            throw new RuntimeException("❌ Không tìm thấy task 'Chọn sản phẩm' trong Process Instance: " + processInstance.getId());
         }
+
         return orderItemResponses;
     }
+
 
 
 

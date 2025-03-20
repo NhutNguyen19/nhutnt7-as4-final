@@ -16,7 +16,7 @@
       <bpmn:lane id="user" name="User">
         <bpmn:flowNodeRef>approve</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>select_product</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>register</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>productProccess</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>order_pending</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>user_cancel</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_1yrn229</bpmn:flowNodeRef>
@@ -30,15 +30,15 @@
       <bpmn:incoming>Flow_1qrdqs6</bpmn:incoming>
       <bpmn:outgoing>Flow_0ekq5mc</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:startEvent id="register" name="Start">
+    <bpmn:startEvent id="productProccess" name="Start">
       <bpmn:outgoing>Flow_1qrdqs6</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0ekq5mc" sourceRef="select_product" targetRef="approve" />
     <bpmn:sequenceFlow id="Flow_0qwkstg" sourceRef="complete_order" targetRef="Gateway_0mrmx20" />
     <bpmn:sequenceFlow id="Flow_0ffj34u" name="Hủy" sourceRef="Gateway_0mrmx20" targetRef="admin_cancel">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${complete == false}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isApproved == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1qrdqs6" sourceRef="register" targetRef="select_product" />
+    <bpmn:sequenceFlow id="Flow_1qrdqs6" sourceRef="productProccess" targetRef="select_product" />
     <bpmn:sequenceFlow id="Flow_0y9vfg5" sourceRef="admin_cancel" targetRef="Event_1orhrgi" />
     <bpmn:sequenceFlow id="Flow_08fp720" sourceRef="approve" targetRef="order_pending" />
     <bpmn:userTask id="order_pending" name="Đơn hàng chờ duyệt" camunda:assignee="user">
@@ -56,15 +56,17 @@
       <bpmn:outgoing>Flow_0ffj34u</bpmn:outgoing>
       <bpmn:outgoing>Flow_0ruic2g</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="admin_cancel" name="Hủy đặt hàng" camunda:delegateExpression="#{cancel}">
+    <bpmn:serviceTask id="admin_cancel" name="Hủy đặt hàng" camunda:class="#{cancel}">
       <bpmn:incoming>Flow_0ffj34u</bpmn:incoming>
       <bpmn:outgoing>Flow_0y9vfg5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="Event_1orhrgi">
       <bpmn:incoming>Flow_0y9vfg5</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0ruic2g" name="Duyệt" sourceRef="Gateway_0mrmx20" targetRef="Activity_1unbwbq" />
-    <bpmn:serviceTask id="Activity_1unbwbq" name="Xử lí đơn hàng" camunda:delegateExpression="#{process}">
+    <bpmn:sequenceFlow id="Flow_0ruic2g" name="Duyệt" sourceRef="Gateway_0mrmx20" targetRef="Activity_1unbwbq">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isApproved == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_1unbwbq" name="Xử lí đơn hàng" camunda:class="com.fis.bank.training.delegate.OrderProcessingDelegate">
       <bpmn:incoming>Flow_0ruic2g</bpmn:incoming>
       <bpmn:outgoing>Flow_0hbin3t</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -88,12 +90,12 @@
         <dc:Bounds x="160" y="80" width="1040" height="560" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_0kw679b_di" bpmnElement="admin" isHorizontal="true">
-        <dc:Bounds x="190" y="360" width="1010" height="280" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1unwa9p_di" bpmnElement="user" isHorizontal="true">
         <dc:Bounds x="190" y="80" width="1010" height="280" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0kw679b_di" bpmnElement="admin" isHorizontal="true">
+        <dc:Bounds x="190" y="360" width="1010" height="280" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0qjefze_di" bpmnElement="approve">
@@ -104,7 +106,7 @@
         <dc:Bounds x="310" y="230" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="register">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="productProccess">
         <dc:Bounds x="222" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="228" y="295" width="25" height="14" />

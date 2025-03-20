@@ -15,9 +15,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.camunda.bpm.engine.RuntimeService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
     ProductMapper productMapper;
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
+    RuntimeService runtimeService;
 
     @Override
     public ProductResponse saveProduct(ProductRequest request) {
@@ -88,10 +92,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getProductByCategoryId(String category) {
         List<Product> products = productRepository.findByCategoryId(category);
+
+        startCamundaProcess(category);
+
         return products
                 .stream()
                 .map(productMapper::toProductResponse)
                 .collect(Collectors.toList());
+    }
+
+    private void startCamundaProcess(String category) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("categoryId", category);
+
+        runtimeService.startProcessInstanceByKey("productProcess", variables);
     }
 
     @Override
