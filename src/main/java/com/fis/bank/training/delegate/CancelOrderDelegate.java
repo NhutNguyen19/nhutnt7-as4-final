@@ -23,7 +23,7 @@ public class CancelOrderDelegate implements JavaDelegate {
         order.setStatus(Status.REJECTED);
         orderRepository.save(order);
 
-        System.out.println("❌ Đơn hàng " + orderId + " đã bị hủy.");
+        System.out.println("Đơn hàng " + orderId + " đã bị hủy.");
 
         execution.setVariable("orderStatus", "CANCELLED");
     }

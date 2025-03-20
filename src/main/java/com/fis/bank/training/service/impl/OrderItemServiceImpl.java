@@ -102,9 +102,9 @@ public class OrderItemServiceImpl implements OrderItemService {
             variables.put("orderId", order.getId()); // Truyền ID đơn hàng để dùng sau này
 
             taskService.complete(task.getId(), variables); // Hoàn thành task
-            System.out.println("✅ Hoàn thành task 'Chọn sản phẩm' cho đơn hàng: " + order.getId());
+            System.out.println("Hoàn thành task 'Chọn sản phẩm' cho đơn hàng: " + order.getId());
         } else {
-            throw new RuntimeException("❌ Không tìm thấy task 'Chọn sản phẩm' trong Process Instance: " + processInstance.getId());
+            throw new RuntimeException("Không tìm thấy task 'Chọn sản phẩm' trong Process Instance: " + processInstance.getId());
         }
 
         return orderItemResponses;

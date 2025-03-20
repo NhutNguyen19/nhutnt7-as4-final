@@ -82,9 +82,9 @@ public class OrderServiceImpl implements OrderService {
 
         if (task != null) {
             taskService.complete(task.getId(), variables);
-            System.out.println("✅ Hoàn thành task 'Tạo hóa đơn' cho đơn hàng: " + order.getId());
+            System.out.println("Hoàn thành task 'Tạo hóa đơn' cho đơn hàng: " + order.getId());
         } else {
-            System.out.println("❌ Không tìm thấy task 'Tạo hóa đơn'!");
+            System.out.println("Không tìm thấy task 'Tạo hóa đơn'!");
         }
 
         return orderMapper.toOrderResponse(order);

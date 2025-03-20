@@ -26,7 +26,7 @@ public class OrderProcessingDelegate implements JavaDelegate {
         order.setCheckOut(LocalDateTime.now());
         orderRepository.save(order);
 
-        System.out.println("✅ Đơn hàng " + orderId + " đã được xử lý...");
+        System.out.println("Đơn hàng " + orderId + " đã được xử lý...");
 
         execution.setVariable("orderStatus", "APPROVED");
     }
