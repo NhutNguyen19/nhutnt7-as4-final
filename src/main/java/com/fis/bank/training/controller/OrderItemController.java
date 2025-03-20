@@ -21,9 +21,16 @@ public class OrderItemController {
 
     OrderItemService orderItemService;
 
-    @PostMapping("/create-order-item")
-    ApiResponse<OrderItemResponse> createOrderItem(@RequestBody OrderItemRequest request){
-        return ApiResponse.<OrderItemResponse>builder()
+    @PostMapping("/start")
+    ApiResponse<String> startOrderProcess(@RequestParam String userId){
+        return ApiResponse.<String>builder()
+                .data(orderItemService.startOrderProcess(userId))
+                .build();
+    }
+
+    @PostMapping("/select-product/complete")
+    ApiResponse<List<OrderItemResponse>> createOrderItem(@RequestBody OrderItemRequest request){
+        return ApiResponse.<List<OrderItemResponse>>builder()
                 .data(orderItemService.insertOrder(request))
                 .build();
     }

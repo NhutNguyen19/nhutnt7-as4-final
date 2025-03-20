@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.nio.channels.FileChannel;
+
 @Entity
 @Getter
 @Setter
@@ -28,4 +30,5 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
+
 }

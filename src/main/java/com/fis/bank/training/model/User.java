@@ -1,6 +1,7 @@
 package com.fis.bank.training.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -29,5 +30,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     Set<Role> roles;
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Order> orders;
 }

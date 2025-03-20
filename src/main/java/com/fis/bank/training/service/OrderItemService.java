@@ -6,7 +6,9 @@ import com.fis.bank.training.dto.response.OrderItemResponse;
 import java.util.List;
 
 public interface OrderItemService {
-    OrderItemResponse insertOrder(OrderItemRequest request);
+
+    String startOrderProcess(String userId);
+    List<OrderItemResponse> insertOrder(OrderItemRequest request);
     List<OrderItemResponse> getOrderItems();
     void deleteOrderItem(String id);
 }
